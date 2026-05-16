@@ -25,6 +25,7 @@ export function createBookingApiPayload(
   roomId: number,
   overrides: Partial<BookingApiPayload> = {}
 ): BookingApiPayload {
+  const offsetDays = randomInt(30, 180);
   return {
     roomid: roomId,
     firstname: 'John',
@@ -33,8 +34,8 @@ export function createBookingApiPayload(
     email: `test.${randomInt(1000, 9999)}@example.com`,
     phone: `07700${randomInt(100000, 999999)}`,
     bookingdates: {
-      checkin: futureDate(7),
-      checkout: futureDate(10),
+      checkin: futureDate(offsetDays),
+      checkout: futureDate(offsetDays + 3),
     },
     ...overrides,
   };
@@ -42,10 +43,13 @@ export function createBookingApiPayload(
 
 export function createRoomData(overrides: Partial<RoomInput> = {}): RoomInput {
   return {
-    roomNumber: randomInt(100, 999),
+    roomName: String(randomInt(100, 999)),
     type: 'Single',
     accessible: false,
-    price: randomInt(100, 500),
+    roomPrice: randomInt(100, 500),
+    features: [],
+    description: 'Automated test room',
+    image: '',
     ...overrides,
   };
 }

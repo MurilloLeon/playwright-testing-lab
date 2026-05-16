@@ -1,6 +1,6 @@
 import { type APIRequestContext } from '@playwright/test';
 import { type AuthCredentials, type AuthToken } from '../types/auth';
-import { type BookingApiPayload, type Booking } from '../types/booking';
+import { type BookingApiPayload, type Booking, type BookingListResponse } from '../types/booking';
 import { type Room, type RoomInput } from '../types/room';
 
 export class ApiClient {
@@ -17,7 +17,7 @@ export class ApiClient {
       password: process.env.ADMIN_PASSWORD ?? 'password',
     };
 
-    const response = await this.request.post('/auth/login', { data: body });
+    const response = await this.request.post('auth/login', { data: body });
 
     if (!response.ok()) {
       throw new Error(`Authentication failed: ${response.status()} ${response.statusText()}`);
@@ -35,13 +35,16 @@ export class ApiClient {
     return { Cookie: `token=${this.token}` };
   }
 
-  async getBookings(): Promise<Booking[]> {
-    const response = await this.request.get('/booking');
-    return response.json() as Promise<Booking[]>;
+  async getBookings(roomId: number): Promise<Booking[]> {
+    const response = await this.request.get(`booking?roomid=${roomId}`, {
+      headers: this.authHeaders(),
+    });
+    const data = (await response.json()) as BookingListResponse;
+    return data.bookings ?? [];
   }
 
   async createBooking(payload: BookingApiPayload): Promise<Booking> {
-    const response = await this.request.post('/booking', {
+    const response = await this.request.post('booking', {
       data: payload,
       headers: this.authHeaders(),
     });
@@ -53,8 +56,20 @@ export class ApiClient {
     return response.json() as Promise<Booking>;
   }
 
+  async getBookingById(bookingId: number): Promise<Booking> {
+    const response = await this.request.get(`booking/${bookingId}`, {
+      headers: this.authHeaders(),
+    });
+
+    if (!response.ok()) {
+      throw new Error(`Get booking failed: ${response.status()}`);
+    }
+
+    return response.json() as Promise<Booking>;
+  }
+
   async deleteBooking(bookingId: number): Promise<void> {
-    const response = await this.request.delete(`/booking/${bookingId}`, {
+    const response = await this.request.delete(`booking/${bookingId}`, {
       headers: this.authHeaders(),
     });
 
@@ -64,13 +79,13 @@ export class ApiClient {
   }
 
   async getRooms(): Promise<Room[]> {
-    const response = await this.request.get('/room');
+    const response = await this.request.get('room');
     const data = await response.json() as { rooms: Room[] };
     return data.rooms;
   }
 
-  async createRoom(payload: RoomInput): Promise<Room> {
-    const response = await this.request.post('/room', {
+  async createRoom(payload: RoomInput): Promise<void> {
+    const response = await this.request.post('room', {
       data: payload,
       headers: this.authHeaders(),
     });
@@ -78,12 +93,10 @@ export class ApiClient {
     if (!response.ok()) {
       throw new Error(`Create room failed: ${response.status()}`);
     }
-
-    return response.json() as Promise<Room>;
   }
 
   async deleteRoom(roomId: number): Promise<void> {
-    const response = await this.request.delete(`/room/${roomId}`, {
+    const response = await this.request.delete(`room/${roomId}`, {
       headers: this.authHeaders(),
     });
 

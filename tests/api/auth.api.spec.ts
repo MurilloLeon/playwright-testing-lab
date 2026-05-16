@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Auth API', () => {
-  test('POST /auth/login - should return token with valid credentials', async ({ request }) => {
-    const response = await request.post('/auth/login', {
+  test('POST auth/login - should return token with valid credentials', async ({ request }) => {
+    const response = await request.post('auth/login', {
       data: {
         username: process.env.ADMIN_USERNAME ?? 'admin',
         password: process.env.ADMIN_PASSWORD ?? 'password',
@@ -17,30 +17,30 @@ test.describe('Auth API', () => {
     expect(body.token.length).toBeGreaterThan(0);
   });
 
-  test('POST /auth/login - should return 403 with invalid credentials', async ({ request }) => {
-    const response = await request.post('/auth/login', {
+  test('POST auth/login - should return 401 with invalid credentials', async ({ request }) => {
+    const response = await request.post('auth/login', {
       data: {
         username: 'wrong_user',
         password: 'wrong_password',
       },
     });
 
-    expect(response.status()).toBe(403);
+    expect(response.status()).toBe(401);
   });
 
-  test('POST /auth/login - should return 403 with empty credentials', async ({ request }) => {
-    const response = await request.post('/auth/login', {
+  test('POST auth/login - should return 401 with empty credentials', async ({ request }) => {
+    const response = await request.post('auth/login', {
       data: {
         username: '',
         password: '',
       },
     });
 
-    expect(response.status()).toBe(403);
+    expect(response.status()).toBe(401);
   });
 
-  test('POST /auth/login - should respond in JSON format', async ({ request }) => {
-    const response = await request.post('/auth/login', {
+  test('POST auth/login - should respond in JSON format', async ({ request }) => {
+    const response = await request.post('auth/login', {
       data: {
         username: process.env.ADMIN_USERNAME ?? 'admin',
         password: process.env.ADMIN_PASSWORD ?? 'password',

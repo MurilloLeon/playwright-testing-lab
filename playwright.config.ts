@@ -44,7 +44,7 @@ export default defineConfig({
       name: 'api',
       testMatch: 'tests/api/**/*.spec.ts',
       use: {
-        baseURL: process.env.API_BASE_URL ?? 'https://automationintesting.online',
+        baseURL: process.env.API_BASE_URL ?? 'https://automationintesting.online/api/',
       },
     },
   ],

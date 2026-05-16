@@ -9,7 +9,6 @@ export class RoomsPage extends BasePage {
   readonly roomNumberInput: Locator;
   readonly createRoomButton: Locator;
   readonly roomList: Locator;
-  readonly successMessage: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -19,7 +18,6 @@ export class RoomsPage extends BasePage {
     this.roomNumberInput = page.getByTestId('roomName');
     this.createRoomButton = page.getByTestId('createRoom');
     this.roomList = page.locator('.room-listing');
-    this.successMessage = page.getByRole('alert');
   }
 
   async goto(): Promise<void> {
@@ -28,10 +26,10 @@ export class RoomsPage extends BasePage {
   }
 
   async createRoom(room: RoomInput): Promise<void> {
-    await this.roomNumberInput.fill(String(room.roomNumber));
+    await this.roomNumberInput.fill(room.roomName);
     await this.roomTypeSelect.selectOption(room.type);
     await this.accessibleSelect.selectOption(String(room.accessible));
-    await this.priceInput.fill(String(room.price));
+    await this.priceInput.fill(String(room.roomPrice));
     await this.createRoomButton.click();
   }
 
@@ -40,14 +38,8 @@ export class RoomsPage extends BasePage {
     return rooms.count();
   }
 
-  async deleteRoomByNumber(roomNumber: number): Promise<void> {
-    const roomRow = this.page.locator(`.room-listing .row:has-text("${roomNumber}")`);
-    const deleteButton = roomRow.getByRole('button', { name: /delete/i });
-    await deleteButton.click();
-  }
-
-  async isRoomVisible(roomNumber: number): Promise<boolean> {
-    const roomRow = this.page.locator(`.room-listing .row:has-text("${roomNumber}")`);
+  async isRoomVisible(roomName: string): Promise<boolean> {
+    const roomRow = this.page.locator(`.room-listing .row:has-text("${roomName}")`);
     return roomRow.isVisible();
   }
 }

@@ -8,15 +8,6 @@ export interface BookingInput {
   lastname: string;
   email: string;
   phone: string;
-  roomId?: number;
-  checkin?: string;
-  checkout?: string;
-}
-
-export interface Booking extends BookingInput {
-  bookingid: number;
-  depositpaid: boolean;
-  bookingdates: BookingDates;
 }
 
 export interface BookingApiPayload {
@@ -27,4 +18,17 @@ export interface BookingApiPayload {
   email: string;
   phone: string;
   bookingdates: BookingDates;
+}
+
+export interface Booking {
+  bookingid: number;
+  roomid: number;
+  firstname: string;
+  lastname: string;
+  depositpaid: boolean;
+  bookingdates: BookingDates;
+}
+
+export interface BookingListResponse {
+  bookings: Booking[];
 }
