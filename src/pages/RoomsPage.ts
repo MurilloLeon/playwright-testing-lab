@@ -12,16 +12,16 @@ export class RoomsPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.roomTypeSelect = page.getByTestId('type');
-    this.accessibleSelect = page.getByTestId('accessible');
-    this.priceInput = page.getByTestId('roomPrice');
+    this.roomTypeSelect = page.locator('#type');
+    this.accessibleSelect = page.locator('#accessible');
+    this.priceInput = page.locator('#roomPrice');
     this.roomNumberInput = page.getByTestId('roomName');
-    this.createRoomButton = page.getByTestId('createRoom');
-    this.roomList = page.locator('.room-listing');
+    this.createRoomButton = page.locator('#createRoom');
+    this.roomList = page.locator('.row.detail');
   }
 
   async goto(): Promise<void> {
-    await super.goto('/#/admin/rooms');
+    await super.goto('/admin/rooms');
     await this.waitForPageLoad();
   }
 
@@ -34,12 +34,12 @@ export class RoomsPage extends BasePage {
   }
 
   async getRoomCount(): Promise<number> {
-    const rooms = this.page.locator('.room-listing > .row');
-    return rooms.count();
+    await this.page.locator('.row.detail').first().waitFor({ state: 'visible' });
+    return this.page.locator('.row.detail').count();
   }
 
   async isRoomVisible(roomName: string): Promise<boolean> {
-    const roomRow = this.page.locator(`.room-listing .row:has-text("${roomName}")`);
+    const roomRow = this.page.locator(`.row.detail:has-text("${roomName}")`);
     return roomRow.isVisible();
   }
 }

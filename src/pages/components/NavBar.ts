@@ -7,8 +7,8 @@ export class NavBar {
 
   constructor(page: Page) {
     this.page = page;
-    this.adminLink = page.getByRole('link', { name: /Admin/i });
-    this.logoLink = page.getByRole('link', { name: /Restful Booker/i });
+    this.adminLink = page.getByRole('link', { name: 'Admin', exact: true });
+    this.logoLink = page.getByRole('link', { name: /Shady Meadows/i });
   }
 
   async clickAdmin(): Promise<void> {

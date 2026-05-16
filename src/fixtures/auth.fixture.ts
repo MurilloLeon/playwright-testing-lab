@@ -18,8 +18,8 @@ export const test = base.extend<AuthFixtures>({
     const loginPage = new LoginPage(page);
     await loginPage.goto();
     await loginPage.loginAsAdmin();
-
     const adminPage = new AdminPage(page);
+    await adminPage.logoutButton.waitFor({ state: 'visible' });
     await use(adminPage);
   },
 });

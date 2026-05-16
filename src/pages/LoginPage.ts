@@ -9,15 +9,15 @@ export class LoginPage extends BasePage {
 
   constructor(page: Page) {
     super(page);
-    this.usernameInput = page.getByTestId('username');
-    this.passwordInput = page.getByTestId('password');
-    this.loginButton = page.getByTestId('submit');
+    this.usernameInput = page.getByLabel('Username');
+    this.passwordInput = page.getByLabel('Password');
+    this.loginButton = page.getByRole('button', { name: 'Login' });
     this.errorMessage = page.getByRole('alert');
   }
 
   async goto(): Promise<void> {
-    await super.goto('/#/admin');
-    await this.waitForPageLoad();
+    await super.goto('/admin');
+    await this.usernameInput.waitFor({ state: 'visible' });
   }
 
   async login(username: string, password: string): Promise<void> {

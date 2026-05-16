@@ -18,10 +18,10 @@ export class BookingPage extends BasePage {
     this.lastNameInput = page.getByPlaceholder('Lastname');
     this.emailInput = page.getByPlaceholder('Email');
     this.phoneInput = page.getByPlaceholder('Phone');
-    this.bookButton = page.getByRole('button', { name: 'Book' });
+    this.bookButton = page.getByRole('button', { name: 'Reserve Now' });
     this.successMessage = page.locator('.booking-confirmation');
     this.calendarNextButton = page.locator('.rbc-btn-group button').last();
-    this.errorMessages = page.locator('.alert-danger p');
+    this.errorMessages = page.locator('.alert-danger li');
   }
 
   async goto(): Promise<void> {
@@ -30,8 +30,14 @@ export class BookingPage extends BasePage {
   }
 
   async openFirstRoomBookingPanel(): Promise<void> {
-    const bookThisRoomButton = this.page.getByRole('button', { name: /Book this room/i }).first();
-    await bookThisRoomButton.click();
+    const bookNowLink = this.page.getByRole('link', { name: 'Book now', exact: true }).first();
+    const href = await bookNowLink.getAttribute('href');
+    await this.page.goto(href!);
+    const reserveButton = this.page.getByRole('button', { name: 'Reserve Now' });
+    await reserveButton.waitFor({ state: 'visible' });
+    await reserveButton.scrollIntoViewIfNeeded();
+    await reserveButton.click();
+    await this.firstNameInput.waitFor({ state: 'visible' });
   }
 
   async fillBookingDetails(details: Omit<BookingInput, 'roomId' | 'checkin' | 'checkout'>): Promise<void> {
@@ -59,7 +65,7 @@ export class BookingPage extends BasePage {
   }
 
   async getValidationErrors(): Promise<string[]> {
-    const errors = await this.errorMessages.allTextContents();
-    return errors;
+    await this.errorMessages.first().waitFor({ state: 'visible' });
+    return this.errorMessages.allTextContents();
   }
 }

@@ -7,10 +7,10 @@ export class RoomCard {
   readonly roomDescription: Locator;
 
   constructor(page: Page, index: number = 0) {
-    this.card = page.locator('.hotel-room-info').nth(index);
-    this.bookButton = this.card.getByRole('button', { name: /Book this room/i });
-    this.roomName = this.card.locator('.room-header');
-    this.roomDescription = this.card.locator('p.col-sm-9');
+    this.card = page.locator('.room-card').nth(index);
+    this.bookButton = this.card.getByRole('link', { name: 'Book now', exact: true });
+    this.roomName = this.card.locator('.card-title');
+    this.roomDescription = this.card.locator('.card-text').first();
   }
 
   async clickBook(): Promise<void> {

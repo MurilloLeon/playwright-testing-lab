@@ -13,13 +13,13 @@ export class AdminPage extends BasePage {
     this.roomsLink = page.getByRole('link', { name: 'Rooms' });
     this.reportLink = page.getByRole('link', { name: 'Report' });
     this.brandingLink = page.getByRole('link', { name: 'Branding' });
-    this.logoutButton = page.getByRole('link', { name: 'Logout' });
+    this.logoutButton = page.getByRole('button', { name: 'Logout' });
     this.pageHeading = page.getByRole('heading', { level: 1 });
   }
 
   async goto(): Promise<void> {
-    await super.goto('/#/admin');
-    await this.waitForPageLoad();
+    await super.goto('/admin');
+    await this.logoutButton.waitFor({ state: 'visible' });
   }
 
   async logout(): Promise<void> {
@@ -32,5 +32,6 @@ export class AdminPage extends BasePage {
 
   async navigateToRooms(): Promise<void> {
     await this.roomsLink.click();
+    await this.page.waitForURL(/\/admin\/rooms/);
   }
 }

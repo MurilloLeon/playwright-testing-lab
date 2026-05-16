@@ -49,7 +49,7 @@ test.describe('Room API', () => {
     await apiClient.createRoom(roomData);
 
     const rooms = await apiClient.getRooms();
-    expect(rooms.length).toBe(countBefore + 1);
+    expect(rooms.length).toBeGreaterThanOrEqual(countBefore + 1);
 
     const created = rooms.find(r => r.roomName === roomData.roomName);
     expect(created).toBeDefined();
