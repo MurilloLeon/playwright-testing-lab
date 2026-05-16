@@ -1,0 +1,30 @@
+{
+  "name": "playwright-testing-lab",
+  "version": "1.0.0",
+  "description": "A production-grade Playwright + TypeScript test framework targeting the Restful-Booker Platform, demonstrating POM, custom fixtures, UI and API testing best practices.",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --project=ui",
+    "test:api": "playwright test --project=api",
+    "test:headed": "playwright test --project=ui --headed",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report",
+    "lint": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MurilloLeon/playwright-testing-lab.git"
+  },
+  "author": "Murillo Leon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MurilloLeon/playwright-testing-lab/issues"
+  },
+  "homepage": "https://github.com/MurilloLeon/playwright-testing-lab#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^22.0.0",
+    "dotenv": "^16.0.0",
+    "typescript": "^5.4.0"
+  }
+}
